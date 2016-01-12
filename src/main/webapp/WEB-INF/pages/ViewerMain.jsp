@@ -12,5 +12,12 @@
 	<h1>csv viewer</h1>
 	<p id="site-title">titttl</p>
 
+	form
+	<form action="/CSVViewer/view-csv" method="POST"
+		enctype="multipart/form-data">
+		<input type="file" name="csvFile" /> <input type="submit" />
+
+	</form>
+
 </body>
 </html>

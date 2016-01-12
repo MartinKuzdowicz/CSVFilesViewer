@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = { "org.csv.viewer.controllers" })
+@ComponentScan(basePackages = { "org.csv.viewer" })
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
@@ -32,8 +32,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public MultipartResolver mulitpartResolver() {
-		return new CommonsMultipartResolver();
-	}
+	public MultipartResolver multipartResolver() {
 
+		return new CommonsMultipartResolver();
+
+	}
 }
