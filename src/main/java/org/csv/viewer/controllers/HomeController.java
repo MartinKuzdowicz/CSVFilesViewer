@@ -1,9 +1,11 @@
 package org.csv.viewer.controllers;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.log4j.Logger;
+import org.csv.viewer.parser.CsvParserService;
+import org.csv.viewer.parser.CsvTableDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
+
+	@Autowired
+	CsvParserService csvParserService;
 
 	private final static Logger logger = Logger.getLogger(HomeController.class);
 
@@ -30,24 +35,12 @@ public class HomeController {
 	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile csvFile) {
 		logger.debug("uploadCsv");
 
-		String fileContent = null;
-		StringBuilder sb = new StringBuilder();
-
+		CsvTableDTO recordsTableDTO = null;
 		if (!csvFile.isEmpty()) {
 
 			try {
-				InputStream is = csvFile.getInputStream();
-
-				int data;
-
-				while ((data = is.read()) != -1) {
-
-					sb.append((char) data);
-
-				}
-
-				fileContent = sb.toString();
-
+				recordsTableDTO = csvParserService.parseISToDTO(csvFile
+						.getInputStream());
 			} catch (IOException e) {
 				logger.debug(e);
 			}
@@ -55,7 +48,7 @@ public class HomeController {
 		}
 
 		ModelAndView mav = new ModelAndView("ViewerMain");
-		mav.addObject("fileContent", fileContent);
+		mav.addObject("recordsTableDTO", recordsTableDTO);
 
 		return mav;
 
