@@ -7,35 +7,69 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="resources/css/main.css">
 <title>csv viewer</title>
+
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+	crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+	crossorigin="anonymous"></script>
+
 </head>
 <body>
 
-	<h1>csv viewer</h1>
-	<p id="site-title">titttl</p>
+	<div class="container-fluid">
+		<header class="text-center">
+		<p>${localeTime}</p>
+		<h1>CSV VIEWER</h1>
+		</header>
+		<form class="form-horizontal col-md-8 col-md-offset-2"
+			action="/CSVViewer/view-csv" method="POST"
+			enctype="multipart/form-data">
+			<div class="form-group">
+				<input class="form-control" type="file" name="csvFile" />
+			</div>
+			<div class="form-group">
+				<input class="btn btn-success btn-group-justified" type="submit"
+					value="add your csv file" />
+			</div>
 
-	form
-	<form action="/CSVViewer/view-csv" method="POST"
-		enctype="multipart/form-data">
-		<input type="file" name="csvFile" /> <input type="submit" />
+		</form>
 
-	</form>
+		<div class="row">
+			<div class="col-md-12">
+				<hr>
+			</div>
+		</div>
 
-	<hr>
+		<table class="table table-bordered table-striped">
 
-	<table>
+			<c:forEach items="${recordsTableDTO.listOfRows}" var="rowWithData">
+				<tr>
+					<c:forEach items="${rowWithData}" var="record">
+						<td>${record}</td>
+					</c:forEach>
 
-		<c:forEach items="${recordsTableDTO.listOfRows}" var="rowWithData">
-			<tr>
-				<c:forEach items="${rowWithData}" var="record">
-					<td>${record}</td>
-				</c:forEach>
+				</tr>
 
-			</tr>
+			</c:forEach>
 
-		</c:forEach>
+		</table>
 
-	</table>
-
-
+	</div>
 </body>
 </html>

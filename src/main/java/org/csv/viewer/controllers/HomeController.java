@@ -1,6 +1,7 @@
 package org.csv.viewer.controllers;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.csv.viewer.parser.CsvParserService;
@@ -52,6 +53,13 @@ public class HomeController {
 
 		return mav;
 
+	}
+
+	public void addBasicObjects(ModelAndView mav) {
+		
+		Locale localeTime = new Locale("PL");
+
+		mav.addObject("localeTime", localeTime);
 	}
 
 }
