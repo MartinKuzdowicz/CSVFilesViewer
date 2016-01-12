@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
-#site-title {
-	color: red;
+.niceBlackBg {
+	background-color: #4b5658;
+	
+}
+
+.whiteText {
+	color: white;
 }

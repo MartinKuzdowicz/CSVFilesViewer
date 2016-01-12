@@ -2,6 +2,7 @@ package org.csv.viewer.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.csv.viewer.parser.CsvParserService;
@@ -35,16 +36,21 @@ public class ViewCsvController {
 	}
 
 	@RequestMapping(value = "/view-csv", method = RequestMethod.POST)
-	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile csvFile) {
+	public ModelAndView uploadCsv(
+			@RequestParam("csvFile") MultipartFile csvFile,
+			@RequestParam Map<String, String> reqBodyMap) {
 
 		logger.debug("uploadCsv");
+
+		boolean withHeaderFlag = reqBodyMap.containsKey("withHeader") ? true
+				: false;
 
 		CsvTableDTO recordsTableDTO = null;
 		if (!csvFile.isEmpty()) {
 
 			try {
-				recordsTableDTO = csvParserService.parseISToDTO(csvFile
-						.getInputStream());
+				recordsTableDTO = csvParserService.parseISToDTO(
+						csvFile.getInputStream(), withHeaderFlag);
 			} catch (IOException e) {
 				logger.debug(e);
 			}
@@ -55,6 +61,7 @@ public class ViewCsvController {
 		addBasicObjects(mav);
 
 		mav.addObject("recordsTableDTO", recordsTableDTO);
+		mav.addObject("withHeaderFlag", withHeaderFlag);
 
 		return mav;
 

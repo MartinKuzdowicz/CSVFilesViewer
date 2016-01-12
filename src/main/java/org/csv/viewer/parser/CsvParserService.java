@@ -17,10 +17,45 @@ public class CsvParserService {
 
 	private final static String newLineDelimiter = "\n";
 
-	public CsvTableDTO parseISToDTO(InputStream is) {
+	private String dataInRowSeparator;
+
+	public CsvTableDTO parseISToDTO(InputStream is, boolean withHeaderFlag) {
 
 		return new CsvTableDTO(
-				buildListOfRowsWithListOfData(parseISToLinesList(is)));
+				buildListOfRowsWithListOfData(parseISToLinesList(is)),
+				withHeaderFlag);
+	}
+
+	private void guessAndSetSeparator(String fileTextContent) {
+
+		final char comaSeparator = ',';
+		int comaSepCount = 0;
+		final char semicolonSeparator = ';';
+		int semiColonSepCount = 0;
+
+		char[] charArr = fileTextContent.toCharArray();
+
+		for (int i = 0; i < charArr.length; i++) {
+
+			switch (charArr[i]) {
+			case comaSeparator:
+				comaSepCount++;
+				break;
+			case semicolonSeparator:
+				semiColonSepCount++;
+				break;
+			default:
+				break;
+			}
+
+		}
+
+		if (comaSepCount > semiColonSepCount) {
+			dataInRowSeparator = comaSeparator + "";
+		} else {
+			dataInRowSeparator = semicolonSeparator + "";
+		}
+
 	}
 
 	private String parseContentFromInputStreamToString(InputStream is) {
@@ -57,6 +92,9 @@ public class CsvParserService {
 		List<String> fileLinesList = new ArrayList<>();
 
 		String content = parseContentFromInputStreamToString(is);
+
+		guessAndSetSeparator(content);
+
 		String noramlizedText = normalizeStringFromNonASCIChars(content);
 		String[] fileLines = noramlizedText.split(newLineDelimiter);
 
@@ -75,7 +113,7 @@ public class CsvParserService {
 		fileLinesList.forEach(row -> {
 
 			List<String> listOfDataInRow = new ArrayList<>();
-			String[] dataArr = row.split(";");
+			String[] dataArr = row.split(dataInRowSeparator);
 			for (int i = 0; i < dataArr.length; i++) {
 				listOfDataInRow.add(dataArr[i]);
 			}

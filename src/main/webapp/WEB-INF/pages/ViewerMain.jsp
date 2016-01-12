@@ -33,15 +33,21 @@
 <body>
 
 	<div class="container-fluid">
-	<p class="pull-right">${localeTime}</p>
+		<p class="pull-right">${localeTime}</p>
 		<header class="text-center">
-		<h1>CSV VIEWER</h1>
+			<h1>CSV VIEWER</h1>
 		</header>
 		<form class="form-horizontal col-md-8 col-md-offset-2"
 			action="/CSVViewer/view-csv" method="POST"
 			enctype="multipart/form-data">
 			<div class="form-group">
 				<input class="form-control" type="file" name="csvFile" />
+			</div>
+			<div class="form-group">
+				<div class="checkbox">
+					<label><input type="checkbox" name="withHeader" value="">with
+						header</label>
+				</div>
 			</div>
 			<div class="form-group">
 				<input class="btn btn-success btn-group-justified" type="submit"
@@ -56,19 +62,16 @@
 			</div>
 		</div>
 
-		<table class="table table-bordered table-striped">
+		<c:choose>
+			<c:when test="${withHeaderFlag}">
+				<jsp:include page="tables/TableWithHeader.jsp"></jsp:include>
+			</c:when>
+			<c:otherwise>
+				<jsp:include page="tables/TableWithoutHeader.jsp"></jsp:include>
+			</c:otherwise>
+		</c:choose>
 
-			<c:forEach items="${recordsTableDTO.listOfRows}" var="rowWithData">
-				<tr>
-					<c:forEach items="${rowWithData}" var="record">
-						<td>${record}</td>
-					</c:forEach>
 
-				</tr>
-
-			</c:forEach>
-
-		</table>
 
 	</div>
 </body>
