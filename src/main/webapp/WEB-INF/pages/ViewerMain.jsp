@@ -33,8 +33,8 @@
 <body>
 
 	<div class="container-fluid">
+	<p class="pull-right">${localeTime}</p>
 		<header class="text-center">
-		<p>${localeTime}</p>
 		<h1>CSV VIEWER</h1>
 		</header>
 		<form class="form-horizontal col-md-8 col-md-offset-2"

@@ -1,7 +1,7 @@
 package org.csv.viewer.controllers;
 
 import java.io.IOException;
-import java.util.Locale;
+import java.time.LocalDate;
 
 import org.apache.log4j.Logger;
 import org.csv.viewer.parser.CsvParserService;
@@ -15,25 +15,28 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class HomeController {
+public class ViewCsvController {
 
 	@Autowired
 	CsvParserService csvParserService;
 
-	private final static Logger logger = Logger.getLogger(HomeController.class);
+	private final static Logger logger = Logger
+			.getLogger(ViewCsvController.class);
 
 	@RequestMapping("/view-csv")
 	public ModelAndView startPage() {
-		logger.debug("home");
+
+		logger.debug("home page");
 
 		ModelAndView mav = new ModelAndView("ViewerMain");
-
+		addBasicObjects(mav);
 		return mav;
 
 	}
 
 	@RequestMapping(value = "/view-csv", method = RequestMethod.POST)
 	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile csvFile) {
+
 		logger.debug("uploadCsv");
 
 		CsvTableDTO recordsTableDTO = null;
@@ -49,6 +52,8 @@ public class HomeController {
 		}
 
 		ModelAndView mav = new ModelAndView("ViewerMain");
+		addBasicObjects(mav);
+
 		mav.addObject("recordsTableDTO", recordsTableDTO);
 
 		return mav;
@@ -56,8 +61,8 @@ public class HomeController {
 	}
 
 	public void addBasicObjects(ModelAndView mav) {
-		
-		Locale localeTime = new Locale("PL");
+
+		LocalDate localeTime = LocalDate.now();
 
 		mav.addObject("localeTime", localeTime);
 	}
