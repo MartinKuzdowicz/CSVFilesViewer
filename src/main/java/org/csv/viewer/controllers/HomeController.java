@@ -1,5 +1,8 @@
 package org.csv.viewer.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +27,35 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/view-csv", method = RequestMethod.POST)
-	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile file) {
+	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile csvFile) {
 		logger.debug("uploadCsv");
 
-		System.out.println(file.getOriginalFilename());
-		System.out.println(file);
+		String fileContent = null;
+		StringBuilder sb = new StringBuilder();
+
+		if (!csvFile.isEmpty()) {
+
+			try {
+				InputStream is = csvFile.getInputStream();
+
+				int data;
+
+				while ((data = is.read()) != -1) {
+
+					sb.append((char) data);
+
+				}
+
+				fileContent = sb.toString();
+
+			} catch (IOException e) {
+				logger.debug(e);
+			}
+
+		}
 
 		ModelAndView mav = new ModelAndView("ViewerMain");
+		mav.addObject("fileContent", fileContent);
 
 		return mav;
 

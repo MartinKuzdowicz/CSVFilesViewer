@@ -19,5 +19,9 @@
 
 	</form>
 
+	<hr>
+
+	<h3>${fileContent}</h3>
+
 </body>
 </html>
