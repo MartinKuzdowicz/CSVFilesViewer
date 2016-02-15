@@ -2,8 +2,10 @@ package org.csv.viewer.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.csv.viewer.parser.CsvParserService;
 import org.csv.viewer.parser.CsvTableDTO;
@@ -21,8 +23,7 @@ public class ViewCsvController {
 	@Autowired
 	CsvParserService csvParserService;
 
-	private final static Logger logger = Logger
-			.getLogger(ViewCsvController.class);
+	private final static Logger logger = Logger.getLogger(ViewCsvController.class);
 
 	@RequestMapping("/view-csv")
 	public ModelAndView startPage() {
@@ -36,21 +37,22 @@ public class ViewCsvController {
 	}
 
 	@RequestMapping(value = "/view-csv", method = RequestMethod.POST)
-	public ModelAndView uploadCsv(
-			@RequestParam("csvFile") MultipartFile csvFile,
+	public ModelAndView uploadCsv(@RequestParam("csvFile") MultipartFile csvFile,
 			@RequestParam Map<String, String> reqBodyMap) {
 
 		logger.debug("uploadCsv");
 
-		boolean withHeaderFlag = reqBodyMap.containsKey("withHeader") ? true
-				: false;
+		boolean withHeaderFlag = reqBodyMap.containsKey("withHeader") ? true : false;
 
 		CsvTableDTO recordsTableDTO = null;
+		byte[] base64Str = null;
+
 		if (!csvFile.isEmpty()) {
 
 			try {
-				recordsTableDTO = csvParserService.parseISToDTO(
-						csvFile.getInputStream(), withHeaderFlag);
+
+				base64Str = Base64.getEncoder().encode(IOUtils.toByteArray(csvFile.getInputStream()));
+				recordsTableDTO = csvParserService.parseISToDTO(csvFile.getInputStream(), withHeaderFlag);
 			} catch (IOException e) {
 				logger.debug(e);
 			}
@@ -60,6 +62,7 @@ public class ViewCsvController {
 		ModelAndView mav = new ModelAndView("ViewerMain");
 		addBasicObjects(mav);
 
+		mav.addObject("base64CSVFile", new String(base64Str));
 		mav.addObject("recordsTableDTO", recordsTableDTO);
 		mav.addObject("withHeaderFlag", withHeaderFlag);
 

@@ -35,7 +35,7 @@
 	<div class="container-fluid">
 		<p class="pull-right">${localeTime}</p>
 		<header class="text-center">
-			<h1>CSV VIEWER</h1>
+		<h1>CSV VIEWER</h1>
 		</header>
 		<form class="form-horizontal col-md-8 col-md-offset-2"
 			action="/CSVViewer/view-csv" method="POST"
@@ -71,7 +71,12 @@
 			</c:otherwise>
 		</c:choose>
 
+		<c:if test="${base64CSVFile ne null}">
 
+			<a id="downloadBtn2" class="btn btn-primary pull-right"
+				href="http://localhost:8080/CSVViewer/download?base64file=${base64CSVFile}">download</a>
+
+		</c:if>
 
 	</div>
 </body>
