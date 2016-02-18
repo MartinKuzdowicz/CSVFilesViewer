@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.csv.viewer.service.PdfService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,6 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DownloadFilesController {
+
+	private PdfService pdfService;
+
+	@Autowired
+	public DownloadFilesController(PdfService pdfService) {
+		this.pdfService = pdfService;
+	}
 
 	private final static Logger logger = Logger.getLogger(DownloadFilesController.class);
 
@@ -52,9 +61,10 @@ public class DownloadFilesController {
 		HttpEntity<byte[]> httpEntity = null;
 
 		HttpHeaders headers = new HttpHeaders();
-		byte[] documentBody = Base64.getDecoder().decode(base64CSV);
-		headers.setContentType(new MediaType("application", "csv"));
-		headers.set("Content-Disposition", "attachment; filename=somefile.csv");
+		String fileContent = Base64.getDecoder().decode(base64CSV).toString();
+		byte[] documentBody = pdfService.createPdfFile();
+		headers.setContentType(new MediaType("application", "pdf"));
+		headers.set("Content-Disposition", "attachment; filename=somefile.pdf");
 		headers.setContentLength(documentBody.length);
 		httpEntity = new HttpEntity<byte[]>(documentBody, headers);
 

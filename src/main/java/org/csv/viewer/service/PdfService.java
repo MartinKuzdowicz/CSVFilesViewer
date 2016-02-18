@@ -1,23 +1,25 @@
 package org.csv.viewer.service;
 
+import java.io.ByteArrayOutputStream;
+
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfStream;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Service
 public class PdfService {
 
-	public void createPdfFile() {
+	public byte[] createPdfFile() {
 
 		Document document = new Document();
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 
 		try {
 
-			byte[] byteArr = null;
-			PdfStream pdfStream = new PdfStream(byteArr);
+			PdfWriter.getInstance(document, ostream);
 			document.open();
 			document.add(new Paragraph("A Hello World PDF document."));
 			document.close();
@@ -25,6 +27,8 @@ public class PdfService {
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
+
+		return ostream.toByteArray();
 
 	}
 
